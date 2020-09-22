@@ -7,18 +7,26 @@ export default function App() {
   return (
     <View style={styles.fullContainer}>
       <View style={styles.halfContainer}>
-        <LifeTotal/>
-        <LifeTotal/>
+        <LifeTotal
+          side='left'
+        />
+        <LifeTotal
+          side='right'
+        />
       </View>
       <View style={styles.halfContainer}>
-        <LifeTotal/>
-        <LifeTotal/>
+        <LifeTotal
+          side='left'
+        />
+        <LifeTotal
+          side='right'
+        />
       </View>
     </View>
   );
 }
 
-const LifeTotal = () => {
+const LifeTotal = ({ side }) => {
   const [total, setTotal] = useState(40)
   const onIncrement = () => {
     setTotal(total + 1)
@@ -34,7 +42,7 @@ const LifeTotal = () => {
       >
         <Icon name="plus" size={20} color="#900" />
       </TouchableOpacity>
-      <Text style={styles.text}>{total}</Text>
+      <Text style={side === 'left' ? styles.leftText : styles.rightText}>{total}</Text>
       <TouchableOpacity
         style={styles.touchy}
         onPress={onDecrement}
@@ -63,9 +71,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 5
+    margin: 2
   },
-  text: {
-    fontSize: 32
+  leftText: {
+    fontSize: 32,
+    transform: [
+      { rotate: '90deg' }
+    ]
+  },
+  rightText: {
+    fontSize: 32,
+    transform: [
+      { rotate: '-90deg' }
+    ]
   }
 });
