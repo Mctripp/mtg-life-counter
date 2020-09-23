@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 
 export default function App() {
   return (
@@ -28,27 +28,60 @@ export default function App() {
 
 const LifeTotal = ({ side }) => {
   const [total, setTotal] = useState(40)
-  const onIncrement = () => {
-    setTotal(total + 1)
+  let timer = useRef(null)
+  const addOne = () => {
+    setTotal(prevTotal => prevTotal + 1)
   }
-  const onDecrement = () => {
-    setTotal(total - 1)
+  const subtractOne = () => {
+    setTotal(prevTotal => prevTotal - 1)
   }
-  return (
+  const longAdd = () => {
+    setTotal(prevTotal => prevTotal + 1)
+    timer.current = setTimeout(() => longAdd(), 100)
+  }
+  const longSubtract = () => {
+    setTotal(prevTotal => prevTotal - 1)
+    timer.current = setTimeout(() => longSubtract(), 100)
+  }
+  const stopTimer = () => {
+    clearTimeout(timer.current)
+    console.log('stopTimer hit')
+  }
+  return side === 'left' ? (
     <View style={styles.quarterContainer}>
-      <TouchableOpacity
-        style={styles.touchy}
-        onPress={onIncrement}
+      <Pressable
+        onPress={subtractOne}
+        onLongPress={longSubtract}
+        onPressOut={stopTimer}
       >
-        <Icon name="plus" size={20} color="#900" />
-      </TouchableOpacity>
-      <Text style={side === 'left' ? styles.leftText : styles.rightText}>{total}</Text>
-      <TouchableOpacity
-        style={styles.touchy}
-        onPress={onDecrement}
+        <Icon style={styles.touchy} name="minus" size={20} color="#900" />
+      </Pressable>
+      <Text style={styles.leftText}>{total}</Text>
+      <Pressable
+        onPress={addOne}
+        onLongPress={longAdd}
+        onPressOut={stopTimer}
       >
-        <Icon name="minus" size={20} color="#900" />
-      </TouchableOpacity>
+        <Icon style={styles.touchy} name="plus" size={20} color="#900" />
+      </Pressable>
+    </View>
+  ) : (
+    <View style={styles.quarterContainer}>
+      <Pressable
+        onPress={addOne}
+        onLongPress={longAdd}
+        onPressOut={stopTimer}
+      >
+        <Icon style={styles.touchy} name="plus" size={20} color="#900" />
+      </Pressable>
+      <Text style={styles.rightText}>{total}</Text>
+      <Pressable
+        onPress={subtractOne}
+        onLongPress={longSubtract}
+        onPressOut={stopTimer}
+      >
+        <Icon style={styles.touchy} name="minus" size={20} color="#900" />
+      </Pressable>
     </View>
   )
 }
@@ -74,15 +107,21 @@ const styles = StyleSheet.create({
     margin: 2
   },
   leftText: {
-    fontSize: 32,
+    fontSize: 64,
     transform: [
       { rotate: '90deg' }
     ]
   },
   rightText: {
-    fontSize: 32,
+    fontSize: 64,
     transform: [
       { rotate: '-90deg' }
+    ]
+  },
+  touchy: {
+    fontSize: 48,
+    transform: [
+      { rotate: '90deg' }
     ]
   }
 });
