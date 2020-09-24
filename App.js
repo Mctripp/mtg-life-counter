@@ -49,6 +49,7 @@ const LifeTotal = ({ side }) => {
   }
   return side === 'left' ? (
     <View style={styles.quarterContainer}>
+      <View style={styles.bufferView}/>
       <Pressable
         onPress={subtractOne}
         onLongPress={longSubtract}
@@ -64,9 +65,15 @@ const LifeTotal = ({ side }) => {
       >
         <Icon style={styles.touchy} name="plus" size={20} color="#900" />
       </Pressable>
+      <View style={styles.leftDiffView}>
+        <Text style={styles.leftDiffText}>life thing</Text>
+      </View>
     </View>
   ) : (
     <View style={styles.quarterContainer}>
+      <View style={styles.rightDiffView}>
+        <Text style={styles.rightDiffText}>life thing</Text>
+      </View>
       <Pressable
         onPress={addOne}
         onLongPress={longAdd}
@@ -82,6 +89,7 @@ const LifeTotal = ({ side }) => {
       >
         <Icon style={styles.touchy} name="minus" size={20} color="#900" />
       </Pressable>
+      <View style={styles.bufferView}/>
     </View>
   )
 }
@@ -102,9 +110,12 @@ const styles = StyleSheet.create({
   quarterContainer: {
     flex: 1,
     backgroundColor: 'blue',
+    flexDirection: 'column',
     alignItems: 'center',
+    alignContent: 'center',
     justifyContent: 'center',
-    margin: 2
+    margin: 2,
+    flexWrap: 'wrap'
   },
   leftText: {
     fontSize: 64,
@@ -112,16 +123,44 @@ const styles = StyleSheet.create({
       { rotate: '90deg' }
     ]
   },
+  leftDiffView: {
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'flex-end'
+  },
+  leftDiffText: {
+    textAlign: 'center',
+    transform: [
+      { rotate: '90deg' }
+    ],
+    backgroundColor: 'orange'
+  },
   rightText: {
     fontSize: 64,
     transform: [
       { rotate: '-90deg' }
     ]
   },
+  rightDiffView: {
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'flex-end'
+  },
+  rightDiffText: {
+    textAlign: 'center',
+    transform: [
+      { rotate: '-90deg' }
+    ],
+    backgroundColor: 'red'
+  },
   touchy: {
     fontSize: 48,
     transform: [
       { rotate: '90deg' }
     ]
+  },
+  bufferView: {
+    height: '100%',
+    width: '20%'
   }
 });
