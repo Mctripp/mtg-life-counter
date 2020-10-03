@@ -9,47 +9,60 @@ export default function App() {
       <View style={styles.halfContainer}>
         <LifeTotal
           side='left'
+          initLife={40}
         />
         <LifeTotal
           side='right'
+          initLife={40}
         />
       </View>
       <View style={styles.halfContainer}>
         <LifeTotal
           side='left'
+          initLife={40}
         />
         <LifeTotal
           side='right'
+          initLife={40}
         />
       </View>
     </View>
   );
 }
 
-const LifeTotal = ({ side }) => {
-  const [total, setTotal] = useState(40)
-  let timer = useRef(null)
+const LifeTotal = ({ side, initLife }) => {
+  const [total, setTotal] = useState(initLife)
+  const [diff, setDiff] = useState(0)
+  let lifeTimer = useRef(null)
+  let diffTimer = useRef(null)
   const addOne = () => {
+    clearTimeout(diffTimer.current)
+    setDiff(prevDiff => prevDiff + 1)
     setTotal(prevTotal => prevTotal + 1)
   }
   const subtractOne = () => {
+    clearTimeout(diffTimer.current)
+    setDiff(prevDiff => prevDiff - 1)
     setTotal(prevTotal => prevTotal - 1)
   }
   const longAdd = () => {
+    clearTimeout(diffTimer.current)
     setTotal(prevTotal => prevTotal + 1)
-    timer.current = setTimeout(() => longAdd(), 100)
+    setDiff(prevDiff => prevDiff + 1)
+    lifeTimer.current = setTimeout(() => longAdd(), 100)
   }
   const longSubtract = () => {
+    clearTimeout(diffTimer.current)
     setTotal(prevTotal => prevTotal - 1)
-    timer.current = setTimeout(() => longSubtract(), 100)
+    setDiff(prevDiff => prevDiff - 1)
+    lifeTimer.current = setTimeout(() => longSubtract(), 100)
   }
   const stopTimer = () => {
-    clearTimeout(timer.current)
-    console.log('stopTimer hit')
+    clearTimeout(lifeTimer.current)
+    diffTimer.current = setTimeout(() => setDiff(0), 1800)
   }
   return side === 'left' ? (
     <View style={styles.quarterContainer}>
-      <View style={styles.bufferView}/>
       <Pressable
         onPress={subtractOne}
         onLongPress={longSubtract}
@@ -66,13 +79,13 @@ const LifeTotal = ({ side }) => {
         <Icon style={styles.touchy} name="plus" size={20} color="#900" />
       </Pressable>
       <View style={styles.leftDiffView}>
-        <Text style={styles.leftDiffText}>life thing</Text>
+        <Text style={styles.leftDiffText}>{diff > 0 ? '+' : ''}{diff}</Text>
       </View>
     </View>
   ) : (
     <View style={styles.quarterContainer}>
       <View style={styles.rightDiffView}>
-        <Text style={styles.rightDiffText}>life thing</Text>
+        <Text style={styles.rightDiffText}>{diff > 0 ? '+' : ''}{diff}</Text>
       </View>
       <Pressable
         onPress={addOne}
@@ -89,7 +102,6 @@ const LifeTotal = ({ side }) => {
       >
         <Icon style={styles.touchy} name="minus" size={20} color="#900" />
       </Pressable>
-      <View style={styles.bufferView}/>
     </View>
   )
 }
@@ -123,17 +135,18 @@ const styles = StyleSheet.create({
       { rotate: '90deg' }
     ]
   },
-  leftDiffView: {
+  rightDiffView: {
+    position: 'absolute',
     height: '100%',
     justifyContent: 'center',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    paddingRight: '70%'
   },
   leftDiffText: {
     textAlign: 'center',
     transform: [
       { rotate: '90deg' }
-    ],
-    backgroundColor: 'orange'
+    ]
   },
   rightText: {
     fontSize: 64,
@@ -141,17 +154,18 @@ const styles = StyleSheet.create({
       { rotate: '-90deg' }
     ]
   },
-  rightDiffView: {
+  leftDiffView: {
+    position: 'absolute',
     height: '100%',
     justifyContent: 'center',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    paddingLeft: '40%'
   },
   rightDiffText: {
     textAlign: 'center',
     transform: [
       { rotate: '-90deg' }
-    ],
-    backgroundColor: 'red'
+    ]
   },
   touchy: {
     fontSize: 48,
@@ -159,8 +173,7 @@ const styles = StyleSheet.create({
       { rotate: '90deg' }
     ]
   },
-  bufferView: {
-    height: '100%',
-    width: '20%'
+  invis: {
+    display: 'none'
   }
 });
