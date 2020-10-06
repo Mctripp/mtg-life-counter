@@ -48,14 +48,30 @@ const LifeTotal = ({ side, initLife }) => {
   const longAdd = () => {
     clearTimeout(diffTimer.current)
     setTotal(prevTotal => prevTotal + 1)
-    setDiff(prevDiff => prevDiff + 1)
-    lifeTimer.current = setTimeout(() => longAdd(), 100)
+    setDiff(prevDiff => {
+      if(Math.abs(prevDiff) > 30) {
+        lifeTimer.current = setTimeout(() => longAdd(), 50)
+      } else if(Math.abs(prevDiff) > 15){
+        lifeTimer.current = setTimeout(() => longAdd(), 80)
+      } else {
+        lifeTimer.current = setTimeout(() => longAdd(), 120)
+      }
+      return prevDiff + 1
+    })
   }
   const longSubtract = () => {
     clearTimeout(diffTimer.current)
     setTotal(prevTotal => prevTotal - 1)
-    setDiff(prevDiff => prevDiff - 1)
-    lifeTimer.current = setTimeout(() => longSubtract(), 100)
+    setDiff(prevDiff => {
+      if(Math.abs(prevDiff) > 30) {
+        lifeTimer.current = setTimeout(() => longSubtract(), 50)
+      } else if(Math.abs(prevDiff) > 15){
+        lifeTimer.current = setTimeout(() => longSubtract(), 80)
+      } else {
+        lifeTimer.current = setTimeout(() => longSubtract(), 120)
+      }
+      return prevDiff - 1
+    })
   }
   const stopTimer = () => {
     clearTimeout(lifeTimer.current)
